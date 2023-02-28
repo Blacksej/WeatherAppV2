@@ -57,8 +57,8 @@ class WeatherModelResponse {
 
     @Serializable
     data class Sys (
-        //val type: Long?,
-        //val id: Long?,
+        val type: Long = 0,
+        val id: Long = 0,
         val country: String,
         val sunrise: Long,
         val sunset: Long

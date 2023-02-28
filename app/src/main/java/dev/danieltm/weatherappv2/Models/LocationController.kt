@@ -2,9 +2,11 @@ package dev.danieltm.weatherappv2.Models
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Geocoder
 import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat.startActivity
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
 import java.util.*
@@ -18,6 +20,7 @@ class LocationController {
     fun getLocation(
         activity: Activity,
         context: Context,
+        intent: Intent,
         callback: (arrayList: ArrayList<String>) -> Unit
     ) {
         fusedLocationProviderClient = LocationServices.getFusedLocationProviderClient(activity)
@@ -30,6 +33,7 @@ class LocationController {
         {
             ActivityCompat.requestPermissions(activity,
                 arrayOf(android.Manifest.permission.ACCESS_FINE_LOCATION), 100)
+
         }
 
         // get latitude and longitude
@@ -58,5 +62,9 @@ class LocationController {
             }
         }
         return cityName ?: ""
+    }
+
+    fun refreshActivity(intent: Intent){
+
     }
 }

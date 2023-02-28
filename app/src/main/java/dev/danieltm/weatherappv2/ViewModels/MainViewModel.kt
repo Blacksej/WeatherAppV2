@@ -2,6 +2,7 @@ package dev.danieltm.weatherappv2.ViewModels
 
 import android.app.Activity
 import android.content.Context
+import android.content.Intent
 import android.location.Location
 import androidx.lifecycle.ViewModel
 import dev.danieltm.weatherappv2.Models.LocationController
@@ -63,8 +64,8 @@ class MainViewModel: ViewModel() {
         }
     }
 
-    fun getLocationAndWeather(activity: Activity, context: Context){
-        locationController.getLocation(activity, context) {list: ArrayList<String> ->
+    fun getLocationAndWeather(activity: Activity, context: Context, intent: Intent){
+        locationController.getLocation(activity, context, intent) {list: ArrayList<String> ->
             _latitude.value = list[0]
             _longitude.value = list[1]
             getCity(latitude.value, longitude.value, context)

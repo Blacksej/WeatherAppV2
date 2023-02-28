@@ -1,5 +1,6 @@
 package dev.danieltm.weatherappv2
 
+import android.content.Intent
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -40,9 +41,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             WeatherAppV2Theme {
-
                 val mainViewModel = viewModel<MainViewModel>()
-                mainViewModel.getLocationAndWeather(this@MainActivity, this)
+                mainViewModel.getLocationAndWeather(this@MainActivity, this, intent)
 
                 val cityName by mainViewModel.cityName.collectAsState()
                 val temp by mainViewModel.temp.collectAsState()
@@ -52,8 +52,8 @@ class MainActivity : ComponentActivity() {
                 val weatherDescription by mainViewModel.weatherDescription.collectAsState()
                 val icon by mainViewModel.icon.collectAsState()
 
-
-
+                //finish()
+                //startActivity(intent)
                 // A surface container using the 'background' color from the theme
                 Surface(
                     modifier = Modifier.fillMaxSize(),
