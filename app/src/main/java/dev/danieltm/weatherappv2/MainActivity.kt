@@ -35,6 +35,7 @@ import dev.danieltm.weatherappv2.Views.CustomAppBar
 import dev.danieltm.weatherappv2.ui.theme.WeatherAppV2Theme
 import java.time.LocalDate
 import java.time.LocalTime
+import java.time.ZoneId
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -66,10 +67,15 @@ class MainActivity : ComponentActivity() {
                             .offset(0.dp, 60.dp),
                         horizontalAlignment = Alignment.Start
                     ) {
-                        val hourOfDay = remember {
-                            LocalTime.now()
-                                .hour + 1
+                        var hourOfDay = remember {
+                            (LocalTime.now()
+                                .hour + 1).toString()
                         }
+
+                        if(hourOfDay == "24"){
+                            hourOfDay = "00"
+                        }
+
                         val dayOfWeek = remember {
                             LocalDate.now()
                                 .dayOfWeek
