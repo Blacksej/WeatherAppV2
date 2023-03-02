@@ -1,16 +1,16 @@
 package dev.danieltm.weatherappv2
 
-import android.content.Intent
+import android.content.Context
 import android.os.Bundle
+import android.telephony.TelephonyManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -20,14 +20,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
-import androidx.compose.ui.text.capitalize
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.font.ResourceFont
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.core.content.res.ResourcesCompat
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import dev.danieltm.weatherappv2.ViewModels.MainViewModel
@@ -35,7 +30,7 @@ import dev.danieltm.weatherappv2.Views.CustomAppBar
 import dev.danieltm.weatherappv2.ui.theme.WeatherAppV2Theme
 import java.time.LocalDate
 import java.time.LocalTime
-import java.time.ZoneId
+
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -52,6 +47,9 @@ class MainActivity : ComponentActivity() {
                 val windDirection by mainViewModel.windDirection.collectAsState()
                 val weatherDescription by mainViewModel.weatherDescription.collectAsState()
                 val icon by mainViewModel.icon.collectAsState()
+
+                val tm = this.getSystemService(Context.TELEPHONY_SERVICE) as TelephonyManager
+                val countryCodeValue = tm.networkCountryIso
 
                 //finish()
                 //startActivity(intent)
@@ -98,7 +96,7 @@ class MainActivity : ComponentActivity() {
                     }
                     Column(
                         modifier = Modifier
-                            .padding(30.dp,45.dp)
+                            .padding(30.dp, 45.dp)
                             .offset(0.dp, 65.dp),
                         horizontalAlignment = Alignment.End
                     ) {
