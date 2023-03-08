@@ -9,25 +9,25 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.MaterialTheme
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Surface
-import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
+import androidx.compose.material.*
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
+import com.google.accompanist.pager.*
 import dev.danieltm.weatherappv2.ViewModels.MainViewModel
 import dev.danieltm.weatherappv2.Views.CustomAppBar
+
+//import dev.danieltm.weatherappv2.Views.TabItem
+
 import dev.danieltm.weatherappv2.ui.theme.WeatherAppV2Theme
+import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -36,7 +36,9 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
+
             WeatherAppV2Theme {
+
                 val mainViewModel = viewModel<MainViewModel>()
                 mainViewModel.getLocationAndWeather(this@MainActivity, this, intent)
 
@@ -59,6 +61,9 @@ class MainActivity : ComponentActivity() {
                     color = MaterialTheme.colors.background
                 ) {
                     ScaffoldTopBar(city = cityName.uppercase())
+
+                    //MainScreen()
+
                     Column(
                         modifier = Modifier
                             .padding(20.dp)
@@ -122,9 +127,133 @@ class MainActivity : ComponentActivity() {
     }
 }
 
+/*
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun MainScreen()
+{
+    val tabs = listOf(
+        TabItem.Home,
+        TabItem.About,
+        TabItem.Settings
+    )
+    
+    val pagerState = rememberPagerState(pageCount = tabs.size)
+    
+    Scaffold(
+        bottomBar = { BottomBar() }
+    ) { paddingValues -> Modifier.padding(paddingValues)
+        Column() {
+            Tabs(tabs = tabs, pagerState = pagerState)
+            TabsContent(tabs = tabs, pagerState = pagerState)
+        }
+    }
+}
+
+@Composable
+fun BottomBar()
+{
+    BottomAppBar(
+        backgroundColor = Color.Green,
+        contentColor = Color.Black
+    ){}
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun Tabs(tabs: List<TabItem>, pagerState: PagerState){
+
+    val scope = rememberCoroutineScope()
+    TabRow(
+        selectedTabIndex = pagerState.currentPage,
+        backgroundColor = Color.Green,
+        contentColor = Color.Black,
+        indicator = { tabPositions ->
+            TabRowDefaults.Indicator(
+                Modifier.pagerTabIndicatorOffset(pagerState, tabPositions)
+            )
+        }
+    ) {
+        tabs.forEachIndexed{ index, tab ->
+            LeadingIconTab(
+                icon = { Icon(painter = painterResource(id = tab.icon), contentDescription = "") },
+                text = { Text(text = tab.title) },
+                selected = pagerState.currentPage == index,
+                onClick = {
+                          scope.launch {
+                              pagerState.animateScrollToPage(index)
+                          }
+                },
+            )
+        }
+    }
+}
+
+@OptIn(ExperimentalPagerApi::class)
+@Composable
+fun TabsContent(tabs: List<TabItem>, pagerState: PagerState)
+{
+    HorizontalPager(state = pagerState) { page ->
+        tabs[page].screen()
+    }
+}
+*/
+
 @Composable
 fun ScaffoldTopBar(city: String) {
     Scaffold(topBar = {CustomAppBar(city = city)}) {
             paddingValues -> Modifier.padding(paddingValues)
     }
 }
+
+/*@Composable
+fun HomeScreen()
+{
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text(
+            text = "Home Screen",
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            fontSize = 30.sp
+        )
+    }
+}
+
+@Composable
+fun AboutScreen()
+{
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text(
+            text = "About Screen",
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            fontSize = 30.sp
+        )
+    }
+}
+
+@Composable
+fun SettingsScreen()
+{
+    Column(
+        modifier = Modifier.fillMaxSize(),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ){
+        Text(
+            text = "Settings Screen",
+            fontWeight = FontWeight.Bold,
+            color = Color.Black,
+            fontSize = 30.sp
+        )
+    }
+}
+*/
