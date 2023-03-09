@@ -11,6 +11,7 @@ import kotlinx.serialization.json.Json
 interface PostService {
 
     suspend fun getPosts(lat: String, long: String): WeatherModelResponse.Welcome
+    suspend fun getPostsFromSearch(city: String): WeatherModelResponse.Welcome
 
     companion object{
         fun create() : PostService{

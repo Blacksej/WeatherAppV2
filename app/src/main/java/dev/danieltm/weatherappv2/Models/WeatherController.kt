@@ -39,4 +39,30 @@ class WeatherController(
         }
     }
 
+    override suspend fun getPostsFromSearch(city: String): WeatherModelResponse.Welcome {
+        return try{
+            var get = client.get { url(HttpRoutes.getWeatherFromSearch(city)) }
+            var body = get.body<WeatherModelResponse.Welcome>()
+            println(body.main?.temp.toString())
+            body
+
+        } catch (e: RedirectResponseException){
+            // 3xx - responses
+            println("Error: ${e.response.status.description}")
+            WeatherModelResponse.Welcome()
+        }catch (e: ClientRequestException){
+            // 4xx - responses
+            println("Error: ${e.response.status.description}")
+            WeatherModelResponse.Welcome()
+        }catch (e: ServerResponseException){
+            // 5xx - responses
+            println("Error: ${e.response.status.description}")
+            WeatherModelResponse.Welcome()
+        }catch (e: Exception){
+            // 3xx - responses
+            println("Error: ${e.message}")
+            WeatherModelResponse.Welcome()
+        }
+    }
+
 }

@@ -7,4 +7,9 @@ object HttpRoutes {
         val GET_WEATHER = "${BASE_URL}lat=$lat&lon=$long&lang=en&appid=148932149d9e7c5c7e5e3a39504a6054"
         return GET_WEATHER
     }
+
+    fun getWeatherFromSearch(city: String):String{
+        val GET_WEATHER_CITY = "${BASE_URL}q=$city&appid=148932149d9e7c5c7e5e3a39504a6054"
+        return GET_WEATHER_CITY
+    }
 }

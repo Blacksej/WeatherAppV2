@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.telephony.TelephonyManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
+import androidx.activity.viewModels
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
@@ -20,21 +21,29 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
 import dev.danieltm.weatherappv2.ViewModels.MainViewModel
+import dev.danieltm.weatherappv2.Views.CustomTopAppBar
 import dev.danieltm.weatherappv2.Views.DefaultTopAppBar
 
 //import dev.danieltm.weatherappv2.Views.TabItem
 
 import dev.danieltm.weatherappv2.ui.theme.WeatherAppV2Theme
+import dev.danieltm.weatherappv2.utilities.SearchAppBarState
+import dev.danieltm.weatherappv2.utilities.SharedViewModel
 import java.time.LocalDate
 import java.time.LocalTime
 
 
 class MainActivity : ComponentActivity() {
+
+    private val sharedViewModel: SharedViewModel by viewModels()
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
 
             WeatherAppV2Theme {
+                val searchAppBarState: SearchAppBarState by sharedViewModel.searchAppBarState
+                val searchTextState: String by sharedViewModel.searchTextState
 
                 val mainViewModel = viewModel<MainViewModel>()
                 mainViewModel.getLocationAndWeather(this@MainActivity, this, intent)
@@ -57,9 +66,14 @@ class MainActivity : ComponentActivity() {
                     modifier = Modifier.fillMaxSize(),
                     color = MaterialTheme.colors.background
                 ) {
-                    ScaffoldTopBar(city = cityName.uppercase())
+                    ScaffoldTopBar(
+                        mainViewModel,
+                        city = cityName.uppercase(),
+                        sharedViewModel,
+                        searchAppBarState = searchAppBarState,
+                        searchTextState = searchTextState
+                    )
 
-                    //MainScreen()
 
                     Column(
                         modifier = Modifier
@@ -117,6 +131,7 @@ class MainActivity : ComponentActivity() {
                                 .size(200.dp)
                                 .offset((-45).dp)
                         )
+                        Text(text = searchTextState)
                     }
                 }
             }
@@ -197,8 +212,22 @@ fun TabsContent(tabs: List<TabItem>, pagerState: PagerState)
 */
 
 @Composable
-fun ScaffoldTopBar(city: String) {
-    Scaffold(topBar = {DefaultTopAppBar(city = city)}) {
+fun ScaffoldTopBar(
+    mainViewModel: MainViewModel,
+    city: String,
+    sharedViewModel: SharedViewModel,
+    searchAppBarState: SearchAppBarState,
+    searchTextState: String
+) {
+    Scaffold(topBar = {
+        CustomTopAppBar(
+            mainViewModel = mainViewModel,
+            sharedViewModel = sharedViewModel,
+            searchAppBarState = searchAppBarState,
+            searchTextState = searchTextState,
+            city = city
+        )
+    }) {
             paddingValues -> Modifier.padding(paddingValues)
     }
 }

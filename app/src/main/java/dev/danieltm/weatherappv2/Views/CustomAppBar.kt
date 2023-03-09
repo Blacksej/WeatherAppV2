@@ -1,7 +1,10 @@
 package dev.danieltm.weatherappv2.Views
 
+import android.view.Display.Mode
 import android.widget.Toast
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
@@ -16,15 +19,55 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import dev.danieltm.weatherappv2.R
+import dev.danieltm.weatherappv2.ViewModels.MainViewModel
+import dev.danieltm.weatherappv2.utilities.SearchAppBarState
+import dev.danieltm.weatherappv2.utilities.SharedViewModel
 import dev.danieltm.weatherappv2.utilities.TrailingIconState
 
 @Composable
-fun CustomTopAppBar(onSearchClicked: () -> Unit){
-
+fun CustomTopAppBar(
+    mainViewModel: MainViewModel,
+    sharedViewModel: SharedViewModel,
+    searchAppBarState: SearchAppBarState,
+    searchTextState: String,
+    city: String
+){
+    val context = LocalContext.current
+    when(searchAppBarState){
+        SearchAppBarState.CLOSED -> {
+            DefaultTopAppBar(
+                city = city,
+                onSearchClicked = {
+                    sharedViewModel.searchAppBarState.value =
+                        SearchAppBarState.OPENED
+                }
+            )
+        }
+        else -> {
+            SearchTopAppBar(
+                text = searchTextState,
+                onTextChange = {text ->
+                    sharedViewModel.searchTextState.value = text
+                },
+                onCloseClicked = {
+                    sharedViewModel.searchAppBarState.value =
+                        SearchAppBarState.CLOSED
+                    sharedViewModel.searchTextState.value = ""
+                },
+                onSearchClicked = {
+                    mainViewModel.getCurrentWeatherFromSearch(sharedViewModel.searchTextState.value)
+                    sharedViewModel.searchAppBarState.value =
+                        SearchAppBarState.CLOSED
+                    sharedViewModel.searchTextState.value = ""
+                }
+            )
+        }
+    }
 }
 
 @Composable
@@ -32,6 +75,7 @@ fun DefaultTopAppBar(city: String, onSearchClicked: () -> Unit)
 {
     Box(modifier = Modifier
         .fillMaxWidth()
+        .height(70.dp)
     ){
         TopAppBar(
             backgroundColor = colorResource(R.color.status_bar_app_bar),
@@ -44,7 +88,6 @@ fun DefaultTopAppBar(city: String, onSearchClicked: () -> Unit)
                     onSearchClicked = onSearchClicked
                 )
             },
-            modifier = Modifier.height(70.dp)
         )
     }
 }
@@ -85,12 +128,39 @@ fun ShareAction(){
 
 @Composable
 fun MoreAction(){
-    val context = LocalContext.current
+    var expanded by remember {
+        mutableStateOf(false)
+    }
     IconButton(
         onClick = {
-            Toast.makeText(context, "More Clicked!", Toast.LENGTH_SHORT).show()}
+            expanded = true
+        }
     ) {
-        Icon(imageVector = Icons.Filled.MoreVert, contentDescription = "more_icon", tint = Color.White)
+        Icon(
+            imageVector = Icons.Filled.MoreVert, 
+            contentDescription = "more_icon", 
+            tint = Color.White
+        )
+        DropdownMenu(
+            expanded = expanded, 
+            onDismissRequest = { expanded = false }
+        ) {
+            DropdownMenuItem(
+                onClick = { expanded = false }
+            ) {
+                Text(text = "Profile")
+            }
+            DropdownMenuItem(
+                onClick = { expanded = false }
+            ) {
+                Text(text = "Weather")
+            }
+            DropdownMenuItem(
+                onClick = { expanded = false }
+            ) {
+                Text(text = "Settings")
+            }
+        }
     }
 }
 
@@ -99,7 +169,7 @@ fun SearchTopAppBar(
     text: String,
     onTextChange: (String) -> Unit,
     onCloseClicked: () -> Unit,
-    onSearchClicked: () -> Unit
+    onSearchClicked: (String) -> Unit
 ){
 
     var trailingIconState by remember {
@@ -108,11 +178,11 @@ fun SearchTopAppBar(
 
     Box(modifier = Modifier
         .fillMaxWidth()
+        .height(56.dp)
     ){
 
         Surface(
             modifier = Modifier
-                .padding(top = 24.dp)
                 .fillMaxSize(),
             color = Color.Transparent,
             elevation = 0.dp
@@ -171,9 +241,28 @@ fun SearchTopAppBar(
                         }
                     }
                     ) {
-                        Icon(imageVector = Icons.Filled.Close, contentDescription = )
+                        Icon(
+                            imageVector = Icons.Filled.Close,
+                            contentDescription = stringResource(id = R.string.close_icon),
+                            tint = Color.White
+                        )
                     }
-                }
+                },
+                keyboardOptions = KeyboardOptions(
+                    imeAction = ImeAction.Search
+                ),
+                keyboardActions = KeyboardActions(
+                    onSearch = {
+                        onSearchClicked(text)
+                    }
+                ),
+                colors = TextFieldDefaults.textFieldColors(
+                    cursorColor = Color.White,
+                    focusedIndicatorColor = Color.Transparent,
+                    disabledIndicatorColor = Color.Transparent,
+                    unfocusedIndicatorColor = Color.Transparent,
+                    backgroundColor = colorResource(id = R.color.status_bar_app_bar)
+                )
             )
         }
 
@@ -184,4 +273,15 @@ fun SearchTopAppBar(
 @Composable
 fun CustomAppBarPreview(){
     DefaultTopAppBar(city = "City", onSearchClicked = {})
+}
+
+@Preview
+@Composable
+fun SearchAppBarStatePreview(){
+    SearchTopAppBar(
+        text = "",
+        onTextChange = {},
+        onCloseClicked = {},
+        onSearchClicked = {}
+    )
 }

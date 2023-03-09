@@ -4,6 +4,8 @@ import android.app.Activity
 import android.content.Context
 import android.content.Intent
 import android.location.Location
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import dev.danieltm.weatherappv2.Models.LocationController
 import dev.danieltm.weatherappv2.Models.WeatherModelResponse
@@ -47,6 +49,9 @@ class MainViewModel: ViewModel() {
     private var _icon = MutableStateFlow("LONG")
     var icon = _icon.asStateFlow()
 
+    private var _searchText = MutableStateFlow("")
+    var searchText = _searchText.asStateFlow()
+
 
     fun getCurrentWeather(lat: String, long: String){
         runBlocking {
@@ -56,6 +61,23 @@ class MainViewModel: ViewModel() {
         _feelsLike.value = (weatherResponseRoot.main?.feelsLike?.minus(273.15)?.roundToInt()).toString()
         _windSpeed.value = (weatherResponseRoot.wind?.speed?.roundToInt()).toString()
         _windDirection.value = weatherResponseRoot.wind?.deg.toString()
+
+        if(weatherResponseRoot.weather[0].description.isNotEmpty()){
+            _weatherDescription.value = weatherResponseRoot
+                .weather[0].description
+            _icon.value = weatherResponseRoot.weather[0].icon
+        }
+    }
+
+    fun getCurrentWeatherFromSearch(city: String){
+        runBlocking {
+            launch { weatherResponseRoot = postService.getPostsFromSearch(city) }
+        }
+        _temp.value = (weatherResponseRoot.main?.temp?.minus(273.15)?.roundToInt()).toString()
+        _feelsLike.value = (weatherResponseRoot.main?.feelsLike?.minus(273.15)?.roundToInt()).toString()
+        _windSpeed.value = (weatherResponseRoot.wind?.speed?.roundToInt()).toString()
+        _windDirection.value = weatherResponseRoot.wind?.deg.toString()
+        _cityName.value = city
 
         if(weatherResponseRoot.weather[0].description.isNotEmpty()){
             _weatherDescription.value = weatherResponseRoot
