@@ -23,59 +23,59 @@ class WeatherModelResponse {
 
     @Serializable
     data class Clouds (
-        val all: Long
+        val all: Long = 11111
     )
 
     @Serializable
     data class Coord (
-        val lon: Double,
-        val lat: Double
+        val lon: Double = 1.1,
+        val lat: Double = 1.1
     )
 
     @Serializable
     data class Main (
-        val temp: Double,
+        val temp: Double = 1.1,
 
         @SerialName("feels_like")
-        val feelsLike: Double,
+        val feelsLike: Double = 1.1,
 
         @SerialName("temp_min")
-        val tempMin: Double,
+        val tempMin: Double = 1.1,
 
         @SerialName("temp_max")
-        val tempMax: Double,
+        val tempMax: Double = 1.1,
 
-        val pressure: Long,
-        val humidity: Long,
+        val pressure: Long = 11111,
+        val humidity: Long = 11111,
 
         @SerialName("sea_level")
-        val seaLevel: Long,
+        val seaLevel: Long = 11111,
 
         @SerialName("grnd_level")
-        val grndLevel: Long
+        val grndLevel: Long = 11111
     )
 
     @Serializable
     data class Sys (
         val type: Long = 0,
         val id: Long = 0,
-        val country: String,
-        val sunrise: Long,
-        val sunset: Long
+        val country: String = "",
+        val sunrise: Long = 11111,
+        val sunset: Long = 11111
     )
 
     @Serializable
     data class Weather (
-        val id: Long,
-        val main: String,
-        val description: String,
-        val icon: String
+        val id: Long = 11111,
+        val main: String = "",
+        val description: String = "",
+        val icon: String = ""
     )
 
     @Serializable
     data class Wind (
-        val speed: Double,
-        val deg: Long,
-        val gust: Double
+        val speed: Double = 1.1,
+        val deg: Long = 11111,
+        val gust: Double = 1.1
     )
 }
