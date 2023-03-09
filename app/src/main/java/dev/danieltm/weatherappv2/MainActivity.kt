@@ -14,20 +14,17 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberAsyncImagePainter
-import com.google.accompanist.pager.*
 import dev.danieltm.weatherappv2.ViewModels.MainViewModel
-import dev.danieltm.weatherappv2.Views.CustomAppBar
+import dev.danieltm.weatherappv2.Views.DefaultTopAppBar
 
 //import dev.danieltm.weatherappv2.Views.TabItem
 
 import dev.danieltm.weatherappv2.ui.theme.WeatherAppV2Theme
-import kotlinx.coroutines.launch
 import java.time.LocalDate
 import java.time.LocalTime
 
@@ -201,7 +198,7 @@ fun TabsContent(tabs: List<TabItem>, pagerState: PagerState)
 
 @Composable
 fun ScaffoldTopBar(city: String) {
-    Scaffold(topBar = {CustomAppBar(city = city)}) {
+    Scaffold(topBar = {DefaultTopAppBar(city = city)}) {
             paddingValues -> Modifier.padding(paddingValues)
     }
 }
