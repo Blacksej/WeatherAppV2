@@ -57,8 +57,8 @@ class MainViewModel: ViewModel() {
         runBlocking {
             launch { weatherResponseRoot = postService.getPosts(lat, long) }
         }
-        _temp.value = (weatherResponseRoot.main?.temp?.minus(273.15)?.roundToInt()).toString()
-        _feelsLike.value = (weatherResponseRoot.main?.feelsLike?.minus(273.15)?.roundToInt()).toString()
+        _temp.value = (weatherResponseRoot.main?.temp?.roundToInt()).toString()
+        _feelsLike.value = (weatherResponseRoot.main?.feelsLike?.roundToInt()).toString()
         _windSpeed.value = (weatherResponseRoot.wind?.speed?.roundToInt()).toString()
         _windDirection.value = weatherResponseRoot.wind?.deg.toString()
 
@@ -73,8 +73,8 @@ class MainViewModel: ViewModel() {
         runBlocking {
             launch { weatherResponseRoot = postService.getPostsFromSearch(city) }
         }
-        _temp.value = (weatherResponseRoot.main?.temp?.minus(273.15)?.roundToInt()).toString()
-        _feelsLike.value = (weatherResponseRoot.main?.feelsLike?.minus(273.15)?.roundToInt()).toString()
+        _temp.value = (weatherResponseRoot.main?.temp?.roundToInt()).toString()
+        _feelsLike.value = (weatherResponseRoot.main?.feelsLike?.roundToInt()).toString()
         _windSpeed.value = (weatherResponseRoot.wind?.speed?.roundToInt()).toString()
         _windDirection.value = weatherResponseRoot.wind?.deg.toString()
         _cityName.value = city

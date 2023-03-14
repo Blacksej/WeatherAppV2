@@ -131,7 +131,6 @@ class MainActivity : ComponentActivity() {
                                 .size(200.dp)
                                 .offset((-45).dp)
                         )
-                        Text(text = searchTextState)
                     }
                 }
             }

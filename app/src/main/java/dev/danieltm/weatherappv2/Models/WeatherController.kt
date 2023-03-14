@@ -17,7 +17,6 @@ class WeatherController(
         return try{
             var get = client.get { url(HttpRoutes.getWeatherFromLatAndLong(lat, long)) }
             var body = get.body<WeatherModelResponse.Welcome>()
-            println(body.main?.temp.toString())
             body
 
         } catch (e: RedirectResponseException){
@@ -43,7 +42,6 @@ class WeatherController(
         return try{
             var get = client.get { url(HttpRoutes.getWeatherFromSearch(city)) }
             var body = get.body<WeatherModelResponse.Welcome>()
-            println(body.main?.temp.toString())
             body
 
         } catch (e: RedirectResponseException){
